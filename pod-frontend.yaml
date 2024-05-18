@@ -1,0 +1,13 @@
+﻿apiVersion: v1
+kind: Pod
+metadata:
+  name: sample-frontend
+  labels:
+    app: frontend
+spec:
+  containers:
+    - name: frontend
+      image: niktt332/forntend
+      ports:
+      - containerPort: 8080
+        name: frontend-port

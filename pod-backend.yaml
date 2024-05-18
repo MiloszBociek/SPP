@@ -1,0 +1,13 @@
+﻿apiVersion: v1
+kind: Pod
+metadata:
+  name: sample-backend
+  labels:
+    app: backend
+spec:
+  containers:
+    - name: backend
+      image: niktt332/backend
+      ports:
+      - containerPort: 8080
+        name: backend-port

@@ -1,0 +1,52 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  labels:
+    app: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          
+          image: niktt332/backend
+          
+          env:
+            - name: MONGODB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: mongodb-host
+            - name: MONGODB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: mongodb-username
+            - name: MONGODB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: mongodb-password
+
+          ports:
+          - containerPort: 5000
+            name: backend-port
+
+          startupProbe:
+            tcpSocket:
+              port: 5000
+            periodSeconds: 15
+
+          readinessProbe:
+            exec:
+              command:
+                - curl
+                - backend-service:9000
