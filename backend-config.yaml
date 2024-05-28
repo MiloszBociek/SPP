@@ -2,5 +2,6 @@
 kind: ConfigMap
 metadata:
   name: backend-config
+  namespace: student-259252
 data:
   mongodb-host: mongodb-headless

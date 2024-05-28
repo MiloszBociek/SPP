@@ -2,11 +2,11 @@
 kind: Deployment
 metadata:
   name: frontend-deployment
+  namespace: student-259252
   labels:
     app: frontend
-
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: frontend
@@ -18,6 +18,25 @@ spec:
       containers:
         - name: frontend
           image: niktt332/frontend
+          env:
+          - name: REACT_APP_BACKEND_URL
+            value: "backend-service"
           ports:
-          - containerPort: 8080
+          - containerPort: 3000
             name: frontend-port
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  namespace: student-259252
+  
+spec:
+  type: LoadBalancer
+  selector:
+    app: frontend
+  ports:
+  - protocol: TCP
+    port: 3000
+    targetPort: frontend-port
+    nodePort: 30700
