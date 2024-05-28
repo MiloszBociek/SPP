@@ -1,0 +1,49 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: explorer
+  namespace: student-259252
+  labels:
+    app: explorer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: explorer
+  template:
+    metadata:
+      labels:
+        app: explorer
+    spec:
+      volumes:
+      - name: backup-pv
+        persistentVolumeClaim:
+          claimName: db-backup-pvc
+      containers:
+        - name: explorer
+          image: filebrowser/filebrowser
+          env:
+            - name: TZ
+              value: Europe/Warsaw
+          ports:
+          - containerPort: 80
+            name: explorer-port
+          volumeMounts:
+          - mountPath: "/srv"
+            name: backup-pv
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: explorer-service
+  namespace: student-259252
+spec:
+  type: NodePort
+  selector:
+    app: explorer
+  ports:
+  - protocol: TCP
+    port: 9000
+    targetPort: explorer-port
+    nodePort: 31900

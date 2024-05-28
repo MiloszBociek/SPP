@@ -1,0 +1,38 @@
+﻿apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: db-backup-job
+  namespace: student-259252
+spec:
+  schedule: "0 0/2 * * 1-5"
+  successfulJobsHistoryLimit: 2
+  failedJobsHistoryLimit: 2
+  timeZone: "Europe/Warsaw"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          volumes:
+          - name: backup-pv
+            persistentVolumeClaim:
+              claimName: db-backup-pvc
+          - name: db-pv
+            persistentVolumeClaim:
+              claimName: mongodb-data-mongodb-0
+          containers:
+          - name: db-backup-container
+            image: mongo:4.4.6
+            imagePullPolicy: IfNotPresent
+            env:
+            - name: TZ
+              value: Europe/Warsaw
+            volumeMounts:
+              - mountPath: "/backup"
+                name: backup-pv
+              - mountPath: "/db"
+                name: db-pv
+            command:
+            - /bin/sh
+            - -c
+            - cp -a /db/. /backup
+          restartPolicy: OnFailure

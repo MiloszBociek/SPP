@@ -1,4 +1,4 @@
-﻿apiVersion: apps/v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend-deployment
@@ -21,11 +21,16 @@ spec:
           image: niktt332/backend
           
           env:
-            - name: MONGODB_HOST
+            - name: MONGODB_RW_HOST
               valueFrom:
                 configMapKeyRef:
                   name: backend-config
-                  key: mongodb-host
+                  key: mongodb-host-rw
+            - name: MONGODB_RO_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: mongodb-host-ro
             - name: MONGODB_USERNAME
               valueFrom:
                 secretKeyRef:

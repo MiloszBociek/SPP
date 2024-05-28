@@ -4,4 +4,5 @@ metadata:
   name: backend-config
   namespace: student-259252
 data:
-  mongodb-host: mongodb-headless
+  mongodb-host-rw: mongodb-headless-rw
+  mongodb-host-ro: mongodb-headless-ro
