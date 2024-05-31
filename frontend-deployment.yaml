@@ -30,7 +30,7 @@ kind: Service
 metadata:
   name: frontend-service
   namespace: student-259252
-  
+
 spec:
   type: LoadBalancer
   selector:
